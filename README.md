@@ -1,6 +1,5 @@
-# Podcast Aggregator & Streamer (ID: `030`)
+# Podcast Aggregator & Streamer
 
-[![Project ID](https://img.shields.io/badge/Project%20ID-030-blue.svg)](https://github.com/hsinidev/030-Podcast-Aggregator-Streamer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Developer](https://img.shields.io/badge/Developer-Hsini%20Mohamed-green.svg)](https://hsini.dev)
 
