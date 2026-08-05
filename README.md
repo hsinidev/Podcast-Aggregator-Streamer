@@ -4,7 +4,7 @@
 [![Developer](https://img.shields.io/badge/Developer-Hsini%20Mohamed-green.svg)](https://hsini.dev)
 
 > **Project ID**: `030`  
-> **Repository**: [https://github.com/hsinidev/030-Podcast-Aggregator-Streamer](https://github.com/hsinidev/030-Podcast-Aggregator-Streamer)
+> **Repository**: [https://github.com/hsinidev/Podcast-Aggregator-Streamer](https://github.com/hsinidev/Podcast-Aggregator-Streamer)
 
 ---
 
@@ -38,10 +38,10 @@ Podcast Aggregator & Streamer is a desktop RSS podcast manager for subscribing t
 ### Setup Instructions
 ```bash
 # 1. Clone the repository
-git clone https://github.com/hsinidev/030-Podcast-Aggregator-Streamer.git
+git clone https://github.com/hsinidev/Podcast-Aggregator-Streamer.git
 
 # 2. Navigate to project directory
-cd 030-Podcast-Aggregator-Streamer
+cd Podcast-Aggregator-Streamer
 
 # 3. Install required dependencies
 pip install -r requirements.txt
@@ -59,7 +59,7 @@ python app.py
 - **Website**: [https://hsini.dev](https://hsini.dev)
 - **Email**: [contact@hsini.dev](mailto:contact@hsini.dev)
 - **GitHub Profile**: [https://github.com/hsinidev](https://github.com/hsinidev)
-- **Project Repo**: [https://github.com/hsinidev/030-Podcast-Aggregator-Streamer](https://github.com/hsinidev/030-Podcast-Aggregator-Streamer)
+- **Project Repo**: [https://github.com/hsinidev/Podcast-Aggregator-Streamer](https://github.com/hsinidev/Podcast-Aggregator-Streamer)
 
 ---
 
