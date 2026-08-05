@@ -1,0 +1,498 @@
+<Window x:Class="PodcastAggregatorStreamer.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PodcastAggregatorStreamer.ViewModels"
+        xmlns:models="clr-namespace:PodcastAggregatorStreamer.Models"
+        mc:Ignorable="d"
+        Title="Podcast Aggregator &amp; Streamer Pro" 
+        Height="850" Width="1350"
+        MinHeight="700" MinWidth="1100"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BgPrimaryBrush}">
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Header Bar -->
+            <RowDefinition Height="Auto" />
+            <!-- Main Content Area -->
+            <RowDefinition Height="*" />
+            <!-- Footer Mini Player -->
+            <RowDefinition Height="Auto" />
+            <!-- Status Bar -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- HEADER BAR -->
+        <Border Grid.Row="0" Background="{StaticResource BgSecondaryBrush}" BorderBrush="{StaticResource BorderColorBrush}" BorderThickness="0,0,0,1" Padding="16,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- App Title & Logo -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="36" Height="36" CornerRadius="8" Background="{StaticResource AccentPrimaryBrush}" Margin="0,0,12,0">
+                        <TextBlock Text="🎙️" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="PODCAST AGGREGATOR &amp; STREAMER PRO" FontWeight="Bold" FontSize="15" Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBlock Text="Low-Latency Workstation &amp; Chapter Marker Inspector v2.0" FontSize="10" Foreground="{StaticResource AccentSecondaryBrush}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Search Bar -->
+                <Grid Grid.Column="1" HorizontalAlignment="Center" Width="400" Margin="20,0">
+                    <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" 
+                             Padding="10,6"
+                             Background="{StaticResource SurfaceCardBrush}" 
+                             Foreground="{StaticResource TextPrimaryBrush}" 
+                             BorderBrush="{StaticResource BorderColorBrush}"
+                             FontSize="12" />
+                </Grid>
+
+                <!-- Header Actions -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Command="{Binding OpenAddFeedDialogCommand}" 
+                            Background="{StaticResource AccentPrimaryBrush}" 
+                            Foreground="White" FontWeight="SemiBold" 
+                            Padding="12,6" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="➕ Add Feed" Margin="0,0,4,0" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding OpenOpmlDialogCommand}" 
+                            Background="{StaticResource SurfaceCardBrush}" 
+                            Foreground="{StaticResource TextPrimaryBrush}" 
+                            BorderBrush="{StaticResource BorderColorBrush}"
+                            Padding="12,6" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📁 OPML Catalog" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding RefreshAllFeedsCommand}" 
+                            Background="{StaticResource SurfaceCardBrush}" 
+                            Foreground="{StaticResource TextPrimaryBrush}" 
+                            BorderBrush="{StaticResource BorderColorBrush}"
+                            Padding="10,6">
+                        <TextBlock Text="🔄 Refresh Feeds" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- MAIN CONTENT AREA -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <!-- Sidebar (Subscribed Podcasts) -->
+                <ColumnDefinition Width="280" />
+                <!-- Central Episode Catalog -->
+                <ColumnDefinition Width="*" />
+                <!-- Chapter & Show Notes Drawer -->
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- SIDEBAR -->
+            <Border Grid.Column="0" Background="{StaticResource BgSecondaryBrush}" BorderBrush="{StaticResource BorderColorBrush}" BorderThickness="0,0,1,0" Padding="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Navigation Filters -->
+                    <StackPanel Grid.Row="0" Margin="0,0,0,16">
+                        <TextBlock Text="NAVIGATION" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}" Margin="4,0,0,8" />
+
+                        <Button Command="{Binding SetActiveNavFilterCommand}" CommandParameter="All" HorizontalContentAlignment="Left" Padding="10,8" Margin="0,2" Background="Transparent" BorderThickness="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📚 All Episodes" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding SetActiveNavFilterCommand}" CommandParameter="Unlistened" HorizontalContentAlignment="Left" Padding="10,8" Margin="0,2" Background="Transparent" BorderThickness="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🟢 Unlistened" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding SetActiveNavFilterCommand}" CommandParameter="Downloaded" HorizontalContentAlignment="Left" Padding="10,8" Margin="0,2" Background="Transparent" BorderThickness="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⬇️ Downloaded Queue" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding SetActiveNavFilterCommand}" CommandParameter="History" HorizontalContentAlignment="Left" Padding="10,8" Margin="0,2" Background="Transparent" BorderThickness="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🕓 Playback History" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <Separator Grid.Row="1" Background="{StaticResource BorderColorBrush}" Margin="0,0,0,12" />
+
+                    <!-- Subscriptions List -->
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <DockPanel Grid.Row="0" Margin="4,0,4,8">
+                            <TextBlock Text="PODCAST SUBSCRIPTIONS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}" DockPanel.Dock="Left" />
+                            <TextBlock Text="{Binding Feeds.Count, StringFormat='({0})'}" FontSize="10" Foreground="{StaticResource AccentSecondaryBrush}" DockPanel.Dock="Right" HorizontalAlignment="Right" />
+                        </DockPanel>
+
+                        <ListBox Grid.Row="1" ItemsSource="{Binding Feeds}" SelectedItem="{Binding SelectedFeed}" Background="Transparent" BorderThickness="0">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:PodcastFeed}">
+                                    <Border Margin="0,2" Padding="6" CornerRadius="6" Background="{StaticResource SurfaceCardBrush}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Feed Artwork -->
+                                            <Border Grid.Column="0" Width="36" Height="36" CornerRadius="4" Background="#2B1F2D" Margin="0,0,10,0">
+                                                <Image Source="{Binding ArtworkUrl}" Stretch="UniformToFill" />
+                                            </Border>
+
+                                            <!-- Feed Info -->
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="11" TextTrimming="CharacterEllipsis" Foreground="{StaticResource TextPrimaryBrush}" />
+                                                <TextBlock Text="{Binding Author}" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+
+                                            <!-- Action/Unread -->
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center" Orientation="Horizontal">
+                                                <Border Background="{StaticResource AccentPrimaryBrush}" CornerRadius="8" Padding="6,2" Visibility="{Binding UnreadCount, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <TextBlock Text="{Binding UnreadCount}" FontSize="9" FontWeight="Bold" Foreground="White" />
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+
+                    <!-- Storage Usage Footer -->
+                    <Border Grid.Row="3" Background="{StaticResource SurfaceCardBrush}" CornerRadius="6" Padding="10" Margin="0,12,0,0">
+                        <StackPanel>
+                            <DockPanel>
+                                <TextBlock Text="Offline Storage Cap" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" DockPanel.Dock="Left" />
+                                <TextBlock Text="{Binding StorageUsageText}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}" DockPanel.Dock="Right" HorizontalAlignment="Right" />
+                            </DockPanel>
+                            <ProgressBar Value="15" Maximum="100" Height="4" Margin="0,6,0,0" Background="#2B1F2D" Foreground="{StaticResource AccentPrimaryBrush}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- CENTRAL EPISODE CATALOG -->
+            <Grid Grid.Column="1" Margin="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Section Header -->
+                <DockPanel Grid.Row="0" Margin="0,0,0,16">
+                    <StackPanel DockPanel.Dock="Left">
+                        <TextBlock Text="{Binding SelectedFeed.Title, FallbackValue='All Podcast Episodes'}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBlock Text="{Binding DisplayedEpisodes.Count, StringFormat='Showing {0} episodes'}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+                    </StackPanel>
+                </DockPanel>
+
+                <!-- Episodes ListGrid -->
+                <DataGrid Grid.Row="1" 
+                          ItemsSource="{Binding DisplayedEpisodes}" 
+                          SelectedItem="{Binding SelectedEpisode}"
+                          AutoGenerateColumns="False" 
+                          IsReadOnly="True" 
+                          Background="Transparent"
+                          RowBackground="{StaticResource SurfaceCardBrush}"
+                          AlternatingRowBackground="#161017"
+                          BorderThickness="0"
+                          GridLinesVisibility="Horizontal"
+                          HorizontalGridLinesBrush="{StaticResource BorderColorBrush}"
+                          HeadersVisibility="Column"
+                          SelectionMode="Single">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="{StaticResource BgSecondaryBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                            <Setter Property="FontSize" Value="11" />
+                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderColorBrush}" />
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Margin" Value="0,2" />
+                        </Style>
+                    </DataGrid.Resources>
+
+                    <DataGrid.Columns>
+                        <!-- Play Action -->
+                        <DataGridTemplateColumn Header="PLAY" Width="60">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.PlayPauseEpisodeCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                            CommandParameter="{Binding}"
+                                            Background="{StaticResource AccentPrimaryBrush}" 
+                                            Foreground="White" 
+                                            Width="32" Height="32" HorizontalAlignment="Center">
+                                        <TextBlock Text="▶" FontSize="12" Margin="2,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Episode Title & Description -->
+                        <DataGridTemplateColumn Header="EPISODE DETAILS" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="8,6">
+                                        <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{Binding ShowNotes}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis" MaxHeight="32" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Publish Date -->
+                        <DataGridTextColumn Header="RELEASED" Binding="{Binding FormattedPubDate}" Width="120" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+
+                        <!-- Duration -->
+                        <DataGridTextColumn Header="DURATION" Binding="{Binding FormattedDuration}" Width="90" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" />
+
+                        <!-- Download Status & Actions -->
+                        <DataGridTemplateColumn Header="OFFLINE / ACTIONS" Width="160">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Button Command="{Binding DataContext.DownloadEpisodeCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                                CommandParameter="{Binding}"
+                                                Background="{StaticResource SurfaceCardBrush}" 
+                                                BorderBrush="{StaticResource BorderColorBrush}"
+                                                Padding="8,4" Margin="0,0,4,0">
+                                            <TextBlock Text="⬇️ Save" FontSize="10" Foreground="{StaticResource TextPrimaryBrush}" />
+                                        </Button>
+
+                                        <Button Command="{Binding DataContext.ToggleMarkListenedCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" BorderThickness="0" Padding="4">
+                                            <TextBlock Text="✔️" FontSize="12" ToolTip="Mark as Listened" />
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <!-- CHAPTER & SHOW NOTES DRAWER (COLUMN 2) -->
+            <Border Grid.Column="2" 
+                    Width="320" 
+                    Background="{StaticResource BgSecondaryBrush}" 
+                    BorderBrush="{StaticResource BorderColorBrush}" 
+                    BorderThickness="1,0,0,0"
+                    Visibility="{Binding IsChapterDrawerOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid Margin="14">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Drawer Header -->
+                    <DockPanel Grid.Row="0" Margin="0,0,0,12">
+                        <TextBlock Text="EPISODE INSPECTOR" FontWeight="Bold" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" DockPanel.Dock="Left" />
+                        <Button Command="{Binding ToggleChapterDrawerCommand}" Background="Transparent" BorderThickness="0" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                            <TextBlock Text="✖" Foreground="{StaticResource TextSecondaryBrush}" />
+                        </Button>
+                    </DockPanel>
+
+                    <!-- Cover Art & Title -->
+                    <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,12">
+                        <Border Width="140" Height="140" CornerRadius="8" Background="{StaticResource SurfaceCardBrush}" Margin="0,0,0,8">
+                            <Image Source="{Binding SelectedEpisode.ArtworkUrl}" Stretch="UniformToFill" />
+                        </Border>
+                        <TextBlock Text="{Binding SelectedEpisode.Title}" FontWeight="Bold" FontSize="13" TextAlignment="Center" TextWrapping="Wrap" Foreground="{StaticResource TextPrimaryBrush}" />
+                    </StackPanel>
+
+                    <!-- Audio Chapters List Header -->
+                    <TextBlock Grid.Row="2" Text="AUDIO CHAPTER MARKERS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource AccentSecondaryBrush}" Margin="0,8,0,6" />
+
+                    <!-- Chapter Markers List -->
+                    <ListBox Grid.Row="3" ItemsSource="{Binding ActiveChapters}" Background="Transparent" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:EpisodeChapter}">
+                                <Border Margin="0,2" Padding="8,6" CornerRadius="6" Background="{StaticResource SurfaceCardBrush}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Button Command="{Binding DataContext.JumpToChapterCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                                CommandParameter="{Binding}"
+                                                Grid.Column="0" Background="{StaticResource AccentSecondaryBrush}" Foreground="White"
+                                                Padding="6,2" Margin="0,0,8,0">
+                                            <TextBlock Text="{Binding FormattedStartTime}" FontSize="9" FontWeight="Bold" />
+                                        </Button>
+                                        <TextBlock Grid.Column="1" Text="{Binding Title}" FontSize="11" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- FOOTER MINI PLAYER BAR -->
+        <Border Grid.Row="2" Background="{StaticResource SurfaceCardBrush}" BorderBrush="{StaticResource BorderColorBrush}" BorderThickness="0,1,0,0" Padding="16,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <!-- Track Info -->
+                    <ColumnDefinition Width="280" />
+                    <!-- Playback Timeline & Skip Controls -->
+                    <ColumnDefinition Width="*" />
+                    <!-- Speed & Volume & Chapter Drawer -->
+                    <ColumnDefinition Width="320" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Currently Playing Info -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="44" Height="44" CornerRadius="6" Background="#2B1F2D" Margin="0,0,10,0">
+                        <Image Source="{Binding CurrentPlayingEpisode.ArtworkUrl}" Stretch="UniformToFill" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center" Width="210">
+                        <TextBlock Text="{Binding CurrentPlayingEpisode.Title, FallbackValue='Select an episode to play'}" FontWeight="Bold" FontSize="11" TextTrimming="CharacterEllipsis" Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBlock Text="{Binding ActiveChapterTitle, FallbackValue='No chapter marker'}" FontSize="9" Foreground="{StaticResource AccentSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Center Controls & Timeline Slider -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0">
+                    <!-- Skip & Play Buttons -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,6">
+                        <Button Command="{Binding SkipBackwardCommand}" Background="Transparent" BorderThickness="0" Padding="8,4" Margin="0,0,12,0" ToolTip="Skip -10 Seconds">
+                            <TextBlock Text="⏪ -10s" Foreground="{StaticResource TextPrimaryBrush}" FontSize="11" />
+                        </Button>
+
+                        <Button Command="{Binding PlayPauseEpisodeCommand}" CommandParameter="{Binding CurrentPlayingEpisode}" 
+                                Background="{StaticResource AccentPrimaryBrush}" Foreground="White" 
+                                Width="36" Height="36" Margin="0,0,12,0">
+                            <TextBlock Text="{Binding IsPlaying, Converter={StaticResource BooleanToPlayPauseSymbolConverter}, FallbackValue='▶'}" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Button>
+
+                        <Button Command="{Binding SkipForwardCommand}" Background="Transparent" BorderThickness="0" Padding="8,4" ToolTip="Skip +30 Seconds">
+                            <TextBlock Text="+30s ⏩" Foreground="{StaticResource TextPrimaryBrush}" FontSize="11" />
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Scrubber Timeline -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="{Binding CurrentTimeSeconds, Converter={StaticResource SecondsToTimeSpanStringConverter}}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,8,0" />
+                        <Slider Grid.Column="1" Value="{Binding CurrentTimeSeconds, Mode=TwoWay}" Maximum="{Binding TotalTimeSeconds}" SmallChange="1" LargeChange="10" VerticalAlignment="Center" Foreground="{StaticResource AccentPrimaryBrush}" />
+                        <TextBlock Grid.Column="2" Text="{Binding TotalTimeSeconds, Converter={StaticResource SecondsToTimeSpanStringConverter}}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" Margin="8,0,0,0" />
+                    </Grid>
+                </StackPanel>
+
+                <!-- Right Side: Playback Speed, Volume & Chapters Toggle -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                    <!-- Variable Speed Selector -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,0">
+                        <TextBlock Text="⚡ Speed:" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                        <ComboBox ItemsSource="{Binding SpeedOptions}" SelectedItem="{Binding SelectedSpeed}" Width="64" FontSize="10" Padding="4,2" />
+                    </StackPanel>
+
+                    <!-- Volume Slider -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,0">
+                        <TextBlock Text="🔊" FontSize="12" Margin="0,0,4,0" VerticalAlignment="Center" />
+                        <Slider Value="{Binding Volume, Mode=TwoWay}" Minimum="0" Maximum="1" Width="70" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Chapters Drawer Button -->
+                    <Button Command="{Binding ToggleChapterDrawerCommand}" Background="{StaticResource SurfaceCardBrush}" BorderBrush="{StaticResource BorderColorBrush}" Padding="8,4">
+                        <TextBlock Text="🔖 Chapters" FontSize="10" Foreground="{StaticResource TextPrimaryBrush}" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- STATUS BAR -->
+        <StatusBar Grid.Row="3" Background="{StaticResource BgPrimaryBrush}" Foreground="{StaticResource TextSecondaryBrush}" Padding="10,4" FontSize="10">
+            <StatusBarItem>
+                <DockPanel LastChildFill="True">
+                    <TextBlock Text="{Binding StatusMessage}" DockPanel.Dock="Left" />
+                </DockPanel>
+            </StatusBarItem>
+        </StatusBar>
+
+        <!-- MODAL OVERLAY: ADD FEED DIALOG -->
+        <Grid Visibility="{Binding IsAddFeedDialogOpen, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#88000000" Grid.RowSpan="4">
+            <Border Background="{StaticResource SurfaceCardBrush}" BorderBrush="{StaticResource BorderColorBrush}" BorderThickness="1" CornerRadius="8" Width="480" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Subscribe to Podcast RSS Feed" FontWeight="Bold" FontSize="15" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12" />
+                    <TextBlock Text="Enter the RSS or Atom podcast XML feed URL:" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,6" />
+                    <TextBox Text="{Binding NewFeedUrl, UpdateSourceTrigger=PropertyChanged}" Padding="8" Background="{StaticResource BgSecondaryBrush}" Foreground="{StaticResource TextPrimaryBrush}" BorderBrush="{StaticResource BorderColorBrush}" Margin="0,0,0,16" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Command="{Binding AddFeedCommand}" Background="{StaticResource AccentPrimaryBrush}" Foreground="White" Padding="14,6" Margin="0,0,8,0">
+                            <TextBlock Text="Subscribe" />
+                        </Button>
+                        <Button Click="OnCloseAddFeedDialog" Background="Transparent" Foreground="{StaticResource TextSecondaryBrush}" Padding="14,6">
+                            <TextBlock Text="Cancel" />
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- MODAL OVERLAY: OPML CATALOG MANAGER -->
+        <Grid Visibility="{Binding IsOpmlDialogOpen, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#88000000" Grid.RowSpan="4">
+            <Border Background="{StaticResource SurfaceCardBrush}" BorderBrush="{StaticResource BorderColorBrush}" BorderThickness="1" CornerRadius="8" Width="550" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="OPML Podcast Catalog Manager" FontWeight="Bold" FontSize="15" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12" />
+                    <TextBlock Text="Paste your OPML XML content to import feeds, or export current subscriptions:" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,6" />
+                    <TextBox Text="{Binding OpmlInputText, UpdateSourceTrigger=PropertyChanged}" Height="150" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Padding="8" Background="{StaticResource BgSecondaryBrush}" Foreground="{StaticResource TextPrimaryBrush}" BorderBrush="{StaticResource BorderColorBrush}" Margin="0,0,0,16" />
+                    <DockPanel>
+                        <Button Command="{Binding ExportOpmlCommand}" Background="{StaticResource AccentSecondaryBrush}" Foreground="White" Padding="12,6" DockPanel.Dock="Left">
+                            <TextBlock Text="Export OPML to File" />
+                        </Button>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                            <Button Command="{Binding ImportOpmlCommand}" Background="{StaticResource AccentPrimaryBrush}" Foreground="White" Padding="14,6" Margin="0,0,8,0">
+                                <TextBlock Text="Import Feeds" />
+                            </Button>
+                            <Button Click="OnCloseOpmlDialog" Background="Transparent" Foreground="{StaticResource TextSecondaryBrush}" Padding="12,6">
+                                <TextBlock Text="Close" />
+                            </Button>
+                        </StackPanel>
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

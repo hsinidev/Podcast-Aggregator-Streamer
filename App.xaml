@@ -1,0 +1,99 @@
+<Application x:Class="PodcastAggregatorStreamer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:PodcastAggregatorStreamer.Converters"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Value Converters -->
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converters:BooleanToPlayPauseSymbolConverter x:Key="BooleanToPlayPauseSymbolConverter" />
+            <converters:SecondsToTimeSpanStringConverter x:Key="SecondsToTimeSpanStringConverter" />
+
+            <!-- Custom Design Tokens: Deep Espresso & Cyber Orange Palette -->
+            <SolidColorBrush x:Key="BgPrimaryBrush" Color="#080608" />
+            <SolidColorBrush x:Key="BgSecondaryBrush" Color="#120D12" />
+            <SolidColorBrush x:Key="SurfaceCardBrush" Color="#1E161F" />
+            <SolidColorBrush x:Key="AccentPrimaryBrush" Color="#F97316" />
+            <SolidColorBrush x:Key="AccentSecondaryBrush" Color="#A855F7" />
+            <SolidColorBrush x:Key="AccentHoverBrush" Color="#EA580C" />
+            <SolidColorBrush x:Key="TextPrimaryBrush" Color="#F8FAFC" />
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="#94A3B8" />
+            <SolidColorBrush x:Key="DangerRedBrush" Color="#EF4444" />
+            <SolidColorBrush x:Key="WarningAmberBrush" Color="#F59E0B" />
+            <SolidColorBrush x:Key="SuccessEmeraldBrush" Color="#10B981" />
+            <SolidColorBrush x:Key="BorderColorBrush" Color="#2B1F2D" />
+
+            <!-- Global Typography -->
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="Segoe UI Variable Display, Inter, sans-serif" />
+                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+            </Style>
+
+            <!-- Custom Button Style -->
+            <Style TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource SurfaceCardBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColorBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="10,6" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border" 
+                                    Background="{TemplateBinding Background}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                    CornerRadius="6" 
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.85" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.7" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Custom TextBox Style -->
+            <Style TargetType="TextBox">
+                <Setter Property="Background" Value="{StaticResource BgSecondaryBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColorBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="8,6" />
+                <Setter Property="CaretBrush" Value="{StaticResource AccentPrimaryBrush}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Border x:Name="border" 
+                                    Background="{TemplateBinding Background}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                    CornerRadius="6">
+                                <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsFocused" Value="True">
+                                    <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource AccentPrimaryBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Custom ScrollBar Styling -->
+            <Style TargetType="ScrollBar">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,64 @@
+{
+  "project_id": 30,
+  "title": "Podcast Aggregator & Streamer Pro (.NET 8 / WPF / WinUI 3)",
+  "folder_name": "030-Podcast-Aggregator-Streamer",
+  "category": "Media Players & Downloader Suite",
+  "target_os": "Windows 10 / Windows 11 (x64 Native Executable / Single-File Self-Contained .exe)",
+  "version": "2.0.0-PROD",
+  "overview": "A high-performance Windows desktop podcast management, RSS feed aggregator, and low-latency audio streaming workstation built with .NET 8.0 / .NET 9.0, C# 12, WPF / WinUI 3 (Wpf.Ui Fluent Design), NAudio / LibVLCSharp, CodeHollow.FeedReader, and SQLite / Entity Framework Core. Enables users to subscribe to RSS/Atom podcast feeds, parse embedded OPML podcast catalogs, stream audio with variable playback speeds (0.5x to 3.0x with pitch correction), navigate ID3v2/MP4 audio chapters, manage offline episode download queues, and execute non-blocking background feed syncs without UI thread freezing.",
+  "key_features": [
+    "RSS/Atom Feed Parsing & OPML Catalog Manager: Fast asynchronous RSS/Atom XML feed parsing engine supporting podcast iTunes tags, episode artwork, enclosure media URL extraction, and 1-click OPML export/import",
+    "Low-Latency Streaming Engine & Variable Speed Control: High-fidelity audio playback pipeline via NAudio or LibVLCSharp with real-time pitch-preserved speed adjustment (0.5x to 3.0x), custom skip buttons (-10s / +30s), and position memory resume",
+    "Audio Chapter Marker & Metadata Inspector: Embedded ID3v2/MP4 chapter marker parser displaying active episode chapters, clickable jump points, episode show notes, and dynamic artwork rendering",
+    "Offline Episode Download Queue & Auto-Pruning Engine: Multi-threaded async download manager streaming episode MP3/AAC/M4A audio files directly to disk with configurable retention limits and storage usage caps",
+    "SQLite Local Storage & Asynchronous Feed Sync: Entity Framework Core / SQLite local database storing podcast subscriptions, listened progress flags, episode history, and background PeriodicTimer sync updates",
+    "Non-Blocking Asynchronous Telemetry & Mini Player: System.Threading.Channels passing playback timecodes, buffer progress, throughput metrics, and system tray mini-player updates directly to WPF UI"
+  ],
+  "core_stack": {
+    "dotnet_version": ".NET 8.0 LTS / .NET 9.0 / C# 12",
+    "gui_framework": "WPF / WinUI 3 with Wpf.Ui (Fluent Dark Theme / Windows 11 Mica Glass Effects)",
+    "mvvm_framework": "CommunityToolkit.Mvvm (ObservableObject, RelayCommand, AsyncRelayCommand)",
+    "audio_engine": "NAudio (v2.2+) / LibVLCSharp (v3.9+) with pitch-preserving speed modifiers",
+    "rss_and_db": "CodeHollow.FeedReader (v1.2+), Microsoft.EntityFrameworkCore.Sqlite (v8.0+)",
+    "concurrency_and_ipc": "System.Threading.Channels, System.Threading.PeriodicTimer, Task.Run, CancellationTokenSource",
+    "packaging": "MSBuild / dotnet publish (PublishSingleFile=true, SelfContained=true, IncludeNativeLibrariesForSelfExtract=true producing standalone ~45MB .exe)"
+  },
+  "design_system_and_theme": {
+    "theme_name": "Deep Espresso & Cyber Orange (Windows 11 Mica / Fluent Grid)",
+    "color_palette": {
+      "background_primary": "#080608",
+      "background_secondary": "#120D12",
+      "surface_card": "#1E161F",
+      "accent_primary": "#F97316",
+      "accent_secondary": "#A855F7",
+      "accent_hover": "#EA580C",
+      "text_primary": "#F8FAFC",
+      "text_secondary": "#94A3B8",
+      "danger_red": "#EF4444",
+      "warning_amber": "#F59E0B",
+      "success_emerald": "#10B981",
+      "border_color": "#2B1F2D"
+    },
+    "typography": {
+      "font_family": "Segoe UI Variable Display, Cascadia Code, Inter, sans-serif",
+      "heading_size": "18pt",
+      "subheading_size": "14pt",
+      "body_size": "11pt",
+      "caption_size": "9pt"
+    }
+  },
+  "system_architecture": {
+    "pattern": "Model-View-ViewModel (MVVM) with Async SQLite & Audio Stream Pipeline",
+    "ui_layer": "WPF / WinUI 3 XAML markup with Wpf.Ui Fluent dark controls, podcast catalog sidebar, episode listing DataGrid, chapter navigation drawer, mini-player footer bar (-10s / +30s buttons), and OPML manager modal",
+    "background_services": "Asynchronous PeriodicTimer background sync service polling subscribed RSS feeds, NAudio/LibVLC audio streaming worker threads, SQLite EF Core database writers, and episode download task workers",
+    "ipc_and_event_bus": "System.Threading.Channels (Channel) streaming atomic playback position updates, episode download progress, and feed updates directly to ViewModel",
+    "process_safety": "Strict unmanaged audio handle cleanup (IWavePlayer.Dispose(), AudioFileReader.Dispose()), database transaction thread safety, cancellation token handling on downloads, and safe temporary file cleanup"
+  },
+  "packaging_spec": {
+    "project_file": "PodcastAggregatorStreamer.csproj",
+    "output_binary_name": "PodcastAggregatorStreamer.exe",
+    "publish_profile": "win-x64",
+    "build_command": "dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true"
+  },
+  "ai_agent_prompt": "You are an elite Senior Desktop Media & Systems Software Engineer tasked with implementing a production-grade native C# / .NET 8 desktop application titled 'Podcast Aggregator & Streamer Pro'.\n\n### PROJECT OBJECTIVE:\nConstruct a zero-dependency, high-speed podcast player, RSS feed aggregator, and offline episode workstation using .NET 8.0 / .NET 9.0, C# 12, WPF / WinUI 3 (Wpf.Ui Fluent Design), NAudio / LibVLCSharp, CodeHollow.FeedReader, and SQLite. Enables users to parse RSS/Atom feeds, import OPML catalogs, stream podcasts with pitch-corrected variable speeds (0.5x to 3.0x), skip intervals (-10s / +30s), inspect audio chapters, download episodes for offline listening, and execute background DB syncs without UI thread freezing.\n\n### MANDATORY TECHNICAL REQUIREMENTS:\n1. .NET 8.0 ARCHITECTURE & MVVM PATTERN:\n   - Built with C# 12 and .NET 8.0 LTS using CommunityToolkit.Mvvm ([ObservableProperty], [RelayCommand]).\n   - Styled using Wpf.Ui applying Fluent Dark theme tokens (#080608 background, #F97316 cyber orange primary accent, #A855F7 violet secondary accent) with Windows 11 Mica glass visual effects.\n\n2. RSS/ATOM FEED ENGINE & SQLITE DATABASE:\n   - Use CodeHollow.FeedReader to fetch and parse podcast feeds asynchronously, extracting iTunes author tags, episode artwork, and media enclosure URLs.\n   - Store podcast channels, episode metadata, play progress timestamps, and listened status in a local SQLite database using Microsoft.EntityFrameworkCore.Sqlite.\n   - Provide OPML import and export capabilities for importing podcast subscription catalogs.\n\n3. AUDIO STREAMING & CHAPTER NAVIGATION ENGINE:\n   - Implement low-latency audio streaming via NAudio or LibVLCSharp supporting real-time speed adjustments (0.5x to 3.0x) with pitch retention.\n   - Provide quick skip buttons (-10s backward, +30s forward) and playback resume position tracking.\n   - Parse embedded ID3v2/MP4 audio chapter markers and render clickable chapter jump points in the UI.\n\n4. OFFLINE DOWNLOAD MANAGER & TELEMETRY:\n   - Build an asynchronous episode download manager streaming audio files to target storage directories.\n   - Stream atomic progress events, byte rates, and active playback timecodes using System.Threading.Channels without locking the main WPF UI thread.\n\n5. SINGLE-FILE PACKAGING:\n   - Deliver complete C# source files (MainWindow.xaml, MainWindow.xaml.cs, MainViewModel.cs, PodcastFeedService.cs, AudioPlayerService.cs, DatabaseService.cs) and a ready-to-publish .csproj configured for PublishSingleFile=true self-contained .exe output."
+}
